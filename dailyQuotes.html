@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dailyQuotes.css">
+    <title>Quote of the day</title>
+</head>
+<body>
+    <div class="quote-box">
+        <h2>Quote of the day</h2>
+        <blockquote id="quote">Loading...</blockquote>
+        <span id="author">Loading....</span>
+        <div>
+            <button onclick="getQuote()">New quote</button>
+            <button onclick="tweet()"><img src="twitter2-removebg-preview.png">Tweet</button>
+        </div>
+    </div>
+    <script>
+        const quoteElement = document.getElementById("quote");
+        const authorElement = document.getElementById("author");
+        const apiUrl = "https://api.quotable.io/random";
+
+        async function getQuote() {
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                quoteElement.textContent = data.content;
+                authorElement.textContent = `- ${data.author}`;
+            } catch (error) {
+                console.error('Error fetching quote:', error);
+                quoteElement.textContent = 'Failed to fetch the quote. Please try again later.';
+                authorElement.textContent = '';
+            }
+        }
+
+        function tweet() {
+            const quoteText = encodeURIComponent(quoteElement.textContent);
+            const authorText = encodeURIComponent(authorElement.textContent);
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${quoteText} ${authorText}`;
+
+            window.open(twitterUrl, "_blank", "width=600,height=300");
+        }
+
+        // Initial load of a quote
+        getQuote();
+    </script>
+</body>
+</html>
